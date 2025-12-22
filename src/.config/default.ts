@@ -5,29 +5,13 @@ import type { ThemeConfig } from '~/types'
 
 export const defaultConfig: ThemeConfig = {
   site: {
-    title: '活版印字',
-    subtitle: 'Typography',
-    author: 'Moeyua',
+    title: 'Nothing blog',
+    subtitle: 'in here',
+    author: 'Nothing',
     description: 'Rediscory the beauty of typography',
     website: 'https://astro-theme-typography.vercel.app/',
     pageSize: 5,
     socialLinks: [
-      {
-        name: 'github',
-        href: 'https://github.com/moeyua/astro-theme-typography',
-      },
-      {
-        name: 'rss',
-        href: '/atom.xml',
-      },
-      {
-        name: 'twitter',
-        href: 'https://github.com/moeyua/astro-theme-typography',
-      },
-      {
-        name: 'mastodon',
-        href: 'https://github.com/moeyua/astro-theme-typography',
-      },
     ],
     navLinks: [
       {
@@ -47,7 +31,7 @@ export const defaultConfig: ThemeConfig = {
         href: '/about',
       },
     ],
-    categoryMap: [{ name: '胡适', path: 'hu-shi' }],
+    categoryMap: [],
     footer: [
       '© %year <a target="_blank" href="%website">%author</a>',
       'Theme <a target="_blank" href="https://github.com/Moeyua/astro-theme-typography">Typography</a> by <a target="_blank" href="https://moeyua.com">Moeyua</a>',
