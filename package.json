@@ -10,16 +10,19 @@
   "scripts": {
     "dev": "astro check && astro dev",
     "build": "astro check && astro build",
-    "preview": "astro preview",
+    "preview": "pnpm run build && wrangler dev",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "typecheck": "tsc --noEmit",
     "theme:release": "tsx scripts/release-theme.ts",
     "theme:create": "tsx scripts/create-post.ts",
-    "theme:update": "tsx scripts/update-theme.ts"
+    "theme:update": "tsx scripts/update-theme.ts",
+    "deploy": "pnpm run build && wrangler deploy",
+    "cf-typegen": "wrangler types"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.4",
+    "@astrojs/cloudflare": "^12.6.13",
     "@astrojs/mdx": "^4.3.0",
     "@astrojs/rss": "^4.0.12",
     "@astrojs/sitemap": "^3.4.1",
@@ -60,7 +63,8 @@
     "typescript": "~5.8.3",
     "unocss": "^66.3.3",
     "unocss-preset-theme": "^0.14.1",
-    "vite-plugin-devtools-json": "^0.3.0"
+    "vite-plugin-devtools-json": "^0.3.0",
+    "wrangler": "^4.107.0"
   },
   "simple-git-hooks": {
     "pre-commit": "pnpm lint-staged"

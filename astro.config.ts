@@ -9,11 +9,14 @@ import UnoCSS from 'unocss/astro'
 import devtoolsJson from 'vite-plugin-devtools-json'
 import { themeConfig } from './src/.config'
 
+import cloudflare from "@astrojs/cloudflare";
+
 // https://astro.build/config
 export default defineConfig({
   site: themeConfig.site.website,
   prefetch: true,
   base: '/',
+
   vite: {
     plugins: [
       // eslint-disable-next-line ts/ban-ts-comment
@@ -21,6 +24,7 @@ export default defineConfig({
       devtoolsJson(),
     ],
   },
+
   markdown: {
     remarkPlugins: [
       remarkMath,
@@ -33,6 +37,7 @@ export default defineConfig({
       wrap: true,
     },
   },
+
   integrations: [
     UnoCSS({ injectReset: true }),
     mdx({}),
@@ -49,4 +54,6 @@ export default defineConfig({
       updateBodyClass: true,
     }),
   ],
+
+  adapter: cloudflare()
 })
