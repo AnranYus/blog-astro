@@ -1,0 +1,24 @@
+---
+title: Qwen3 ASR 在 DCU K100的推理问题
+pubDate: 2026-05-13
+categories: []
+description: ''
+slug: cuda
+draft: false
+---
+Qwen3 ASR在海光的K100 DCU上推理出现失败，海光官方修复需要等待vLLM下次发版，显然不可能让客户等一个多月，于是我只能自己动手了。
+
+## 问题
+Qwen3ASR的text_config带有 mrope_section，vLLM将其当作MRoPe模型。海光官方 vLLM 镜像里，Qwen3 的 attention 默认走融合算子 rms_rotary_embedding_fuse，它只接受 [num_tokens] 或 [batch, seq_len]。[3, N] 会被当成 batch=3，query.size(0) == positions.size(0) 检查失败，调用失败。
+
+## 解法
+问题的原因无非是自定义算子和新推理结构语意不匹配，那么最显而易见的方式就是回退，
+直接加一个判断 `if envs.VLLM_USE_FUSED_RMS_ROPE and positions.ndim == 1：positions` 是二维时，就走 else 分支，分开调 RMSNorm 和 RoPE
+然而这会带来性能回退，无法正确走到fused优化。
+
+通过阅读上游vLLM在Asr路径下Omni的逻辑发现，ASR本身吗没有H,W，在解码实现上本质是将N广播到3,N，因此直接在算子调用边界将3,N 取 N，这在数学上是等价的。
+
+## 额外的探索
+海光本身有实现`fuse_rms_mrope_cuda`，但是该算子只接受完成计算的cos/sin，调用前会先查cos/sin表，这会导致多出4次拷贝，它比回退路径好的地方只有两点：不用付 Triton launcher 在 Python 侧的开销，RMSNorm 和 RoPE 合成了一次访存。
+
+当然我们也可以直接修改`fuse_rms_roped`使其支持THW，但是这会破坏该算子原有语意，且Asr本身就没有H,W，这是额外的无必要的工作。
