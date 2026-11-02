@@ -2,12 +2,10 @@
 title: Qwen3 ASR 在 DCU K100的推理问题
 pubDate: 2026-05-13
 categories: []
-description: ''
+description: 'Qwen3 ASR在海光的K100 DCU上推理出现失败，海光官方修复需要等待vLLM下次发版，显然不可能让客户等一个多月，于是我只能自己动手了。'
 slug: cuda
 draft: false
 ---
-Qwen3 ASR在海光的K100 DCU上推理出现失败，海光官方修复需要等待vLLM下次发版，显然不可能让客户等一个多月，于是我只能自己动手了。
-
 ## 问题
 Qwen3ASR的text_config带有 mrope_section，vLLM将其当作MRoPe模型。海光官方 vLLM 镜像里，Qwen3 的 attention 默认走融合算子 rms_rotary_embedding_fuse，它只接受 [num_tokens] 或 [batch, seq_len]。[3, N] 会被当成 batch=3，query.size(0) == positions.size(0) 检查失败，调用失败。
 
