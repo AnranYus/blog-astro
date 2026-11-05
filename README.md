@@ -66,7 +66,7 @@ description: "description"
 Or, you can use the following command in your terminal to create a new post:
 
 ```bash
-pnpm theme:create
+bun run theme:create
 ```
 
 ## Updating the theme

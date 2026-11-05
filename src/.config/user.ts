@@ -2,6 +2,15 @@ import type { UserConfig } from '~/types'
 
 export const userConfig: Partial<UserConfig> = {
   // Override the default config here
-  // site: { title: "講評世界" },
-  // seo: { twitter: "@moeyua13" },
+  site: {
+    title: 'Nothing blog',
+    subtitle: 'in here',
+    author: 'Nothing',
+    website: 'https://blog.uni.moe/',
+    socialLinks: [],
+    categoryMap: [],
+  },
+  seo: {
+    twitter: '',
+  },
 }

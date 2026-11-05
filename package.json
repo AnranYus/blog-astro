@@ -2,7 +2,7 @@
   "name": "astro-theme-typography",
   "type": "module",
   "version": "0.1.0",
-  "packageManager": "pnpm@10.13.1",
+  "packageManager": "bun@1.4.4",
   "description": "A typography theme for Astro, inspired by the design of the original Typography theme.",
   "author": "Moeyua <mail@moeyua.com> (https://github.com/moeyua/)",
   "license": "MIT",
@@ -10,14 +10,14 @@
   "scripts": {
     "dev": "astro check && astro dev",
     "build": "astro check && astro build",
-    "preview": "pnpm run build && wrangler dev",
+    "preview": "bun run build && wrangler dev",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "typecheck": "tsc --noEmit",
-    "theme:release": "tsx scripts/release-theme.ts",
-    "theme:create": "tsx scripts/create-post.ts",
-    "theme:update": "tsx scripts/update-theme.ts",
-    "deploy": "pnpm run build && wrangler deploy",
+    "typecheck": "astro check",
+    "theme:release": "bun scripts/release-theme.ts",
+    "theme:create": "bun scripts/create-post.ts",
+    "theme:update": "bun scripts/update-theme.ts",
+    "deploy": "bun run build && wrangler deploy",
     "cf-typegen": "wrangler types"
   },
   "dependencies": {
@@ -32,7 +32,6 @@
     "astro-robots-txt": "^1.0.0",
     "astro-seo": "^0.8.4",
     "giscus": "^1.6.0",
-    "pnpm": "^10.26.1",
     "rehype-katex": "^7.0.1",
     "remark-math": "^6.0.0"
   },
@@ -59,7 +58,6 @@
     "prettier-plugin-astro": "^0.14.1",
     "sanitize-html": "^2.17.0",
     "simple-git-hooks": "^2.13.0",
-    "tsx": "^4.20.3",
     "typescript": "~5.8.3",
     "unocss": "^66.3.3",
     "unocss-preset-theme": "^0.14.1",
@@ -67,7 +65,7 @@
     "wrangler": "^4.107.0"
   },
   "simple-git-hooks": {
-    "pre-commit": "pnpm lint-staged"
+    "pre-commit": "bunx lint-staged"
   },
   "lint-staged": {
     "*": "eslint --fix"
