@@ -14,12 +14,22 @@ createPost()
 async function createPost(): Promise<void> {
   consola.start('Ready to create a new post!')
 
-  const filename: string = await consola.prompt('Enter file name: ', { type: 'text' })
-  const extension: string = await consola.prompt('Select file extension: ', { type: 'select', options: ['.md', '.mdx'] })
-  const isDraft: boolean = await consola.prompt('Is this a draft?', { type: 'confirm', initial: true })
+  const filename = ask('Enter file name:')
+  if (!filename) {
+    consola.error('File name is required!')
+    return
+  }
+
+  const extension = ask('File extension (md/mdx):', 'md').toLowerCase().replace(/^\./, '')
+  if (extension !== 'md' && extension !== 'mdx') {
+    consola.error(`Unsupported file extension: ${extension}`)
+    return
+  }
+
+  const isDraft = askYesNo('Is this a draft? (y/n):', true)
 
   const targetDir = './src/content/posts/'
-  const fullPath: string = path.join(targetDir, `${filename}${extension}`)
+  const fullPath: string = path.join(targetDir, `${filename}.${extension}`)
 
   const frontmatter = getFrontmatter({
     title: filename,
@@ -34,8 +44,7 @@ async function createPost(): Promise<void> {
     fs.writeFileSync(fullPath, frontmatter)
     consola.success('New post created successfully!')
 
-    const open: boolean = await consola.prompt('Open the new post?', { type: 'confirm', initial: true })
-    if (open) {
+    if (askYesNo('Open the new post? (y/n):', true)) {
       consola.info(`Opening ${fullPath}...`)
       execSync(`code "${fullPath}"`)
     }
@@ -43,6 +52,29 @@ async function createPost(): Promise<void> {
   catch (error) {
     consola.error((error as Error).message || 'Failed to create new post!')
   }
+}
+
+/**
+ * Ask a question in the terminal using Bun's built-in prompt().
+ * consola.prompt() does not work under Bun: it never receives the typed text.
+ * @param message The question to show.
+ * @param fallback The value used when the user just presses Enter.
+ * @returns The trimmed answer.
+ */
+function ask(message: string, fallback = ''): string {
+  // eslint-disable-next-line no-alert -- This is Bun's terminal prompt, not a browser dialog.
+  const answer = fallback ? prompt(message, fallback) : prompt(message)
+  return (answer ?? fallback).trim()
+}
+
+/**
+ * Ask a yes/no question in the terminal.
+ * @param message The question to show.
+ * @param fallback The value used when the user just presses Enter.
+ * @returns Whether the user answered yes.
+ */
+function askYesNo(message: string, fallback: boolean): boolean {
+  return ask(message, fallback ? 'y' : 'n').toLowerCase().startsWith('y')
 }
 
 /**
